@@ -23,14 +23,14 @@ def holiday_parser(r):
     date_year = []
 
     date_extraction = lambda x, y: datetime.strptime(' '.join([str(elem) for elem in row.find_all('td')[x].text
-                                                              .strip('*').split()[1:3]]) + ', ' + y, "%B %d, %Y")
+                                                              .strip('*').split()[1:3]]) + ', ' + y, "%B %d, %Y").date()
 
     for holidays in holidays_table.find_all('tbody'):
         rows = holidays.find_all('tr')
         for year in range(len(years)):
             for row in rows:
                 try:
-                    date = date_extraction(year+1, years[year])
+                    date = date_extraction(year + 1, years[year])
                     date_year.append(date)
                     holiday.append(row.find_all('td')[0].text.strip())
                 except ValueError:

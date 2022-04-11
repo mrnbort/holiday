@@ -1,6 +1,6 @@
 import requests
 from parser import holiday_parser
-from database import holiday_db
+from db_fill import holiday_db
 
 url = 'https://www.nyse.com/markets/hours-calendars'
 
