@@ -15,3 +15,22 @@ class HolidayUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class CreateUser(BaseModel):
+    username: str
+    email: str
+    first_name: str
+    last_name: str
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class VerifyUser(BaseModel):
+    username: str
+    password: str
+
+    class Config:
+        orm_mode = True
