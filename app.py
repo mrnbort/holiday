@@ -23,6 +23,10 @@ def get_db():
         db.close()
 
 
+def get_nyse_url():
+    return 'https://www.nyse.com/markets/hours-calendars'
+
+
 @app.get("/")
 async def read_all(db: Session = Depends(get_db)):
     return db.query(models.Holidays).order_by(models.Holidays.date.asc()).all()
@@ -37,6 +41,9 @@ async def list_holidays_for_a_date_range(holiday_date_start: date,
                                             .filter(models.Holidays.status != 'deleted')\
                                             .with_entities(models.Holidays.desc, models.Holidays.date)\
                                             .order_by(models.Holidays.date.asc()).all()
+    if len(holiday_list) == 0:
+        raise http_exception()
+
     return holiday_list
 
 
@@ -51,16 +58,21 @@ async def is_holiday(date_to_check: date,
 
 @app.post('/holidays/')
 async def reload_holidays(validation: bool = Depends(get_validation_status),
-                          db: Session = Depends(get_db)):
-    if validation is True:
-        db.query(models.Holidays).order_by(models.Holidays.date.asc()).all()
-        url = 'https://www.nyse.com/markets/hours-calendars'
-        resp = requests.get(url)
-        holidays_tuple = holiday_parser(resp)
-        for holiday in holidays_tuple:
-            holiday_db(db, holiday)
+                          db: Session = Depends(get_db), url: str = Depends(get_nyse_url)):
+    if not validation:
+        return
 
-        return successful_response(200)
+    db.query(models.Holidays).order_by(models.Holidays.date.asc()).all()
+    resp = requests.get(url)
+
+    if resp.status_code != 200:
+        raise HTTPException(status_code=resp.status_code, detail="source refused to provide data")
+
+    holidays_tuple = holiday_parser(resp)
+    for holiday in holidays_tuple:
+        holiday_db(db, holiday)
+
+    return {"loaded": len(holidays_tuple)}
 
 
 @app.post("/")
@@ -111,7 +123,7 @@ async def delete_holiday(holiday_date: date,
     if validation is True:
 
         if db.query(models.Holidays) \
-                .filter(models.Holidays.date == holiday_date) is None:
+                .filter(models.Holidays.date == holiday_date).first() is None:
             raise http_exception()
 
         db.query(models.Holidays).filter(models.Holidays.date == holiday_date).update({models.Holidays.status: 'deleted'})
@@ -130,7 +142,7 @@ async def delete_holidays(holiday_date_start: date,
 
         if db.query(models.Holidays) \
                 .filter(models.Holidays.date >= holiday_date_start) \
-                .filter(models.Holidays.date <= holiday_date_end) is None:
+                .filter(models.Holidays.date <= holiday_date_end).first() is None:
             raise http_exception()
 
         db.query(models.Holidays).filter(models.Holidays.date >= holiday_date_start, models.Holidays.date <=
@@ -142,7 +154,7 @@ async def delete_holidays(holiday_date_start: date,
 
 
 def http_exception():
-    return HTTPException(status_code=404, detail="Holiday not found")
+    return HTTPException(status_code=404, detail="No holidays found.")
 
 
 def successful_response(status_code: int):
@@ -150,4 +162,5 @@ def successful_response(status_code: int):
         'status': status_code,
         'transaction': 'Successful'
     }
+
 # uvicorn app:app --reload
