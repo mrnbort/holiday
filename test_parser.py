@@ -1,6 +1,5 @@
 import unittest
 from parser import holiday_parser
-from database import holiday_db
 import os
 from datetime import datetime
 
@@ -20,20 +19,12 @@ class TestParser(unittest.TestCase):
 
     def test_parser(self):
         self.assertEqual(self.output[0][0], 'Martin Luther King, Jr. Day')
-        self.assertEqual(self.output[0][1], datetime.strptime('2022-01-17', '%Y-%m-%d'))
+        self.assertEqual(self.output[0][1], datetime.strptime('2022-01-17', '%Y-%m-%d').date())
         self.assertEqual(self.output[-1][0], 'Christmas Day')
-        self.assertEqual(self.output[-1][1], datetime.strptime('2024-12-25', '%Y-%m-%d'))
+        self.assertEqual(self.output[-1][1], datetime.strptime('2024-12-25', '%Y-%m-%d').date())
         self.assertEqual(self.output[12][0], 'Good Friday')
-        self.assertEqual(self.output[12][1], datetime.strptime('2023-04-07', '%Y-%m-%d'))
+        self.assertEqual(self.output[12][1], datetime.strptime('2023-04-07', '%Y-%m-%d').date())
 
 
 if __name__ == '__main__':
     unittest.main()
-
-# class TestDB(unittest.TestCase):
-#
-#
-#
-#     def test_db(self):
-#         self.
-

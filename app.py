@@ -37,6 +37,9 @@ async def list_holidays_for_a_date_range(holiday_date_start: date,
                                             .filter(models.Holidays.status != 'deleted')\
                                             .with_entities(models.Holidays.desc, models.Holidays.date)\
                                             .order_by(models.Holidays.date.asc()).all()
+    if len(holiday_list) == 0:
+        raise http_exception()
+
     return holiday_list
 
 
@@ -111,7 +114,7 @@ async def delete_holiday(holiday_date: date,
     if validation is True:
 
         if db.query(models.Holidays) \
-                .filter(models.Holidays.date == holiday_date) is None:
+                .filter(models.Holidays.date == holiday_date).first() is None:
             raise http_exception()
 
         db.query(models.Holidays).filter(models.Holidays.date == holiday_date).update({models.Holidays.status: 'deleted'})
@@ -130,7 +133,7 @@ async def delete_holidays(holiday_date_start: date,
 
         if db.query(models.Holidays) \
                 .filter(models.Holidays.date >= holiday_date_start) \
-                .filter(models.Holidays.date <= holiday_date_end) is None:
+                .filter(models.Holidays.date <= holiday_date_end).first() is None:
             raise http_exception()
 
         db.query(models.Holidays).filter(models.Holidays.date >= holiday_date_start, models.Holidays.date <=
@@ -142,7 +145,7 @@ async def delete_holidays(holiday_date_start: date,
 
 
 def http_exception():
-    return HTTPException(status_code=404, detail="Holiday not found")
+    return HTTPException(status_code=404, detail="No holidays found.")
 
 
 def successful_response(status_code: int):
@@ -150,4 +153,5 @@ def successful_response(status_code: int):
         'status': status_code,
         'transaction': 'Successful'
     }
+
 # uvicorn app:app --reload
