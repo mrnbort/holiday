@@ -4,8 +4,7 @@ import os
 from datetime import datetime
 
 
-testdata_filename = os.path.join(os.path.dirname('/Users/marynabort/Desktop/Umputun_project/holiday/testdata/'),
-                                 'response.html')
+testdata_filename = os.path.join(os.path.dirname('testdata/'), 'response.html')
 
 
 class TestParser(unittest.TestCase):

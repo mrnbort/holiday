@@ -1,8 +1,9 @@
+from pytest_httpserver import HTTPServer
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import Base
-from app import app, get_db
+from app import app, get_db, get_nyse_url
 from requests.auth import HTTPBasicAuth
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -114,3 +115,19 @@ def test_delete_holidays():
                              auth=auth)
     assert response.status_code == 404, response.text
     assert response.json() == {"detail": "No holidays found."}
+
+
+def test_reload_holidays(httpserver: HTTPServer):
+    resp_body = open("testdata/response.html").read()
+    httpserver.expect_request("/hours-calendars").respond_with_data(status=200, response_data=resp_body)
+    nyse_test_url = httpserver.url_for("/hours-calendars")
+
+    def override_nyse_url():
+        return nyse_test_url
+
+    app.dependency_overrides[get_nyse_url] = override_nyse_url
+
+    auth = HTTPBasicAuth(username="admin", password="Lapatusik")
+    response = client.post("/holidays/", auth=auth)
+    assert response.status_code == 200
+    assert response.text == '{"loaded":29}'
