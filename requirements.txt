@@ -1,0 +1,7 @@
+beautifulsoup4==4.11.1
+fastapi==0.75.2
+pydantic==1.9.0
+pytest_httpserver==1.0.4
+requests==2.27.1
+SQLAlchemy==1.4.32
+uvicorn==0.17.6
