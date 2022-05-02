@@ -131,6 +131,3 @@ def test_reload_holidays(httpserver: HTTPServer):
     response = client.post("/holidays/", auth=auth)
     assert response.status_code == 200
     assert response.text == '{"loaded":29}'
-
-
-Base.metadata.drop_all(bind=engine)
