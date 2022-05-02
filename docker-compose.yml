@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  holidayservice:
+    image: holiday-service:1.0
+    build: .
+    command: uvicorn app:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - db-data:/code
+    ports:
+      - 8001:8000
+
+volumes:
+  db-data:

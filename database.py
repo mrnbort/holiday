@@ -1,19 +1,15 @@
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 
-def holiday_db(holidays_tuple):
+SQLALCHEMY_DATABASE_URL = "sqlite:///./holidays.db"
 
-    conn = sqlite3.connect('holidays.db')
-    c = conn.cursor()
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-    c.execute('''DROP TABLE IF EXISTS holidays''')
-    c.execute('''CREATE TABLE holidays(holiday TEXT, date TEXT)''')
-    c.executemany('''INSERT INTO holidays VALUES(?, ?)''', holidays_tuple)
-    print('We have inserted', c.rowcount, 'records to the table.')
-    conn.commit()
-    c.execute('''SELECT * FROM holidays''')
-    results = c.fetchall()
-    print(results)
-    conn.close()
-
-# update insert if does not exist
+Base = declarative_base()
+Base.metadata.create_all(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session = SessionLocal()
