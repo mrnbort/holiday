@@ -2,13 +2,26 @@ version: "3"
 
 services:
   holidayservice:
-    image: holiday-service:1.0
+    image: ghcr.io/umputun/holiday:master
     build: .
-    command: uvicorn app:app --reload --host 0.0.0.0 --port 8000
     volumes:
       - db-data:/code
     ports:
-      - 8001:8000
+      - "8000"
+
+  scheduler:
+    image: ghcr.io/umputun/cronn
+    entrypoint: ['/srv/cronn',  '--log.enabled', '--command="0 0 * * * /usr/bin/curl -X POST http://holidayservice:8000/holidays/ -u admin:Lapatusik"']
+
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - holidayservice
+    volumes:
+      - ./etc/service.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
 
 volumes:
   db-data:
