@@ -53,7 +53,7 @@ In addition, the admin can also remove a holiday record or holiday records for a
        ```
    - Example with `curl`:
        ```
-       curl -X 'POST' 'http://host/api/' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"desc": "Holiday Description", "date": "YYYY-MM-DD"}' -u 'user:password'
+       curl -X 'POST' 'http://host/api/' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"desc": "Holiday Description", "date": "2022-07-22"}' -u 'user:password'
        ```
    - Returns: 
        ```json
@@ -82,7 +82,7 @@ In addition, the admin can also remove a holiday record or holiday records for a
        ```
    - Example with `curl`:
        ```
-       curl -X 'PUT' 'http://host/api/YYYY-MM-DD' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"desc": "New Holiday Description"}' -u 'user:password'
+       curl -X 'PUT' 'http://host/api/2022-01-01' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"desc": "New Holiday Description"}' -u 'user:password'
        ```
    - Returns: `{"status":200,"transaction":"Successful"}`
 
