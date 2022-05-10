@@ -2,7 +2,7 @@ version: "3"
 
 services:
   holidayservice:
-    image: ghcr.io/umputun/holiday:master
+    image: ghcr.io/mrnbort/holiday:master
     build: .
     volumes:
       - db-data:/code

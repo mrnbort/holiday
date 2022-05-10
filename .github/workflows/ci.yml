@@ -38,7 +38,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/master' }}
         env:
           GITHUB_PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-          USERNAME: umputun
+          USERNAME: mrnbort
           GITHUB_SHA: ${{ github.sha}}
           GITHUB_REF: ${{ github.ref}}
         run: |
@@ -53,7 +53,7 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         env:
           GITHUB_PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-          USERNAME: umputun
+          USERNAME: mrnbort
           GITHUB_SHA: ${{ github.sha}}
           GITHUB_REF: ${{ github.ref}}
         run: |
