@@ -18,9 +18,9 @@ In addition, the admin can also remove a holiday record or holiday records for a
 2. Create or copy `etc/service.conf` and modify to your service config
 3. Start a container with `docker-compose up`
 
-##API
+## API
 
-###Public Endpoints
+### Public Endpoints
 
 1. `GET /api/` - returns the list of loaded holidays (intended for internal use only), i.e.
     ```
@@ -40,7 +40,7 @@ In addition, the admin can also remove a holiday record or holiday records for a
     ```
 3. `GET /api/is_holiday/?date_to_check=YYYY-MM-DD` - returns `'Is a holiday.'` if the date is a holiday, or `'Not a holiday.'` if the date is not a holiday.
 
-###Admin Endpoints
+### Admin Endpoints
 
 1. `POST /api/` - adds a holiday record
 
