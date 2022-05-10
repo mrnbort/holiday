@@ -1,4 +1,4 @@
-# Holiday service
+# Holiday service [![Run Tests and Build an Image](https://github.com/mrnbort/holiday/actions/workflows/ci.yml/badge.svg)](https://github.com/mrnbort/holiday/actions/workflows/ci.yml)
 
 ## Description
 
