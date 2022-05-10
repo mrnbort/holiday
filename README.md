@@ -45,17 +45,22 @@ In addition, the admin can also remove a holiday record or holiday records for a
 1. `POST /api/` - adds a holiday record
 
    - Request body:
-       ```
-       {"desc": "Holiday Description", 
-       "date": "YYYY-MM-DD"}
+       ```json
+       {
+        "desc": "Holiday Description", 
+        "date": "YYYY-MM-DD"
+       }
        ```
    - Example with `curl`:
        ```
        curl -X 'POST' 'http://host/api/' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"desc": "Holiday Description", "date": "YYYY-MM-DD"}' -u 'user:password'
        ```
    - Returns: 
-       ```
-       {"status":201, "transaction":"Successful"}
+       ```json
+       {
+        "status":201, 
+        "transaction":"Successful"
+       }
        ```
 
 2. `POST /api/holidays/` - loads/reloads a list of holidays from https://www.nyse.com/markets/hours-calendars
@@ -72,7 +77,7 @@ In addition, the admin can also remove a holiday record or holiday records for a
 3. `PUT /api/YYYY-MM-DD` - updates an existing holiday record
 
    - Request body:
-       ```
+       ```json
        {"desc": "New Holiday Description"}
        ```
    - Example with `curl`:
